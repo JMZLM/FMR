@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<!-- Designed by CodingLab | www.youtube.com/codinglabyt -->
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Glassmorphism Website | CodingLab</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Your additional CSS styles here */
+    .header-content {
+      display: flex;
+      justify-content: flex-start;
+      /* Align from left to right */
+      align-items: flex-start;
+      flex-wrap: wrap;
+      padding: 0 20px;
+    }
+
+    .text-content {
+      position: relative;
+      margin-bottom: 50px; /* Added margin */
+    }
+
+    .button-container {
+      position: absolute;
+      bottom: 200px; /* Adjust as needed */
+      left: 23%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .table-container {
+      flex: 1;
+      margin-top: auto;
+      margin-left: 20px;
+      text-align: center;
+      width: 90%; /* Adjusted width */
+      max-height: 70%; /* Added max-height */
+      overflow: auto; /* Added overflow */
+    }
+
+
+    table {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      /* Smoothing the edges */
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+      border-collapse: separate;
+      /* Separate borders */
+      border-spacing: 0;
+    }
+
+    table th,
+    table td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      border-color: transparent;
+    }
+
+    table th:first-child,
+    table td:first-child {
+      border-left: none;
+    }
+
+    table th:last-child,
+    table td:last-child {
+      border-right: none;
+    }
+
+    table th {
+      background: rgba(255, 255, 255, 0.1);
+      color: #000;
+    }
+
+    table tr:first-child th,
+    table tr:first-child td {
+      border-top: none;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      /* Changing hover effect */
+    }
+
+    tr:hover th,
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.2);
+      /* Changing hover effect */
+    }
+
+    #detect-emotion-btn {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #000; /* Text color */
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #detect-emotion-btn:hover {
+      background-color: rgba(255, 255, 255, 0.2); /* Hover background color */
+    }
+
+    /* Pagination styles */
+    .pagination {
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      margin: 0 5px;
+      padding: 5px 10px;
+      background-color: rgba(255, 255, 255, 0.1); /* Match the table background */
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      color: #000; /* Text color */
+    }
+
+    .pagination button.active {
+      background-color: rgba(255, 255, 255, 0.2); /* Active button background */
+      color: #fff; /* Text color */
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+         <a href="#"><img src="images/logo1.jpg" alt="Logo"></a>
+      </div>
+      <ul class="menu">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Latest</a></li>
+        <li><a href="#">Offers</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+
+     <!-- <div class="buttons">
+  <input type="button" value="Login">
+  <input type="button" value="Register">
+</div> -->
+
+    </nav>
+    <div class="header-content">
+      <div class="text-content">
+        <h2>Learn To Enjoy,<br>Every Moment Of Your Life</h2>
+
+        <p>Lorem ipsum dolor sit amet,rem ipsum dolor sit am consectetur adipisicing elit. Laborum facere in nam, officiis aspernatur consectetur aliquid sequi possimus et. Sint.</p>
+      </div>
+      <div class="button-container">
+        <button id="detect-emotion-btn">Detect Emotion</button>
+      </div>
+      <div class="table-container">
+       <table>
+  <thead>
+    <tr>
+      <th>Artist</th>
+      <th>Album</th>
+      <th>Track Name</th>
+      <th>Genre</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    <tr>
+          <td>{{ row['artists'] }}</td>
+          <td>{{ row['album_name'] }}</td>
+          <td>{{ row['track_name'] }}</td>
+          <td>{{ row['track_genre'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+        <div class="pagination">
+          <button class="prev">&#10094; Prev</button>
+          <button class="next">Next &#10095;</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <script>
+    // JavaScript for pagination
+    document.addEventListener("DOMContentLoaded", function () {
+      const table = document.querySelector("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const rowsPerPage = 5;
+      const pageCount = Math.ceil(rows.length / rowsPerPage);
+      let currentPage = 1;
+
+      function showPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        rows.forEach((row, index) => {
+          if (index >= start && index < end) {
+            row.style.display = "table-row";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      }
+
+      function updateButtons() {
+        const prevButton = document.querySelector(".pagination .prev");
+        const nextButton = document.querySelector(".pagination .next");
+        if (currentPage === 1) {
+          prevButton.disabled = true;
+        } else {
+          prevButton.disabled = false;
+        }
+        if (currentPage === pageCount) {
+          nextButton.disabled = true;
+        } else {
+          nextButton.disabled = false;
+        }
+      }
+
+  function goToPrevPage() {
+        if (currentPage > 1) {
+          currentPage--;
+          showPage(currentPage);
+          updateButtons();
+        }
+      }
+
+      function goToNextPage() {
+        if (currentPage < pageCount) {
+          currentPage++;
+          showPage(currentPage);
+          updateButtons();
+        }
+      }
+
+      // Show the initial page
+      showPage(currentPage);
+      updateButtons();
+
+      // Event listeners for pagination buttons
+      document.querySelector(".pagination .prev").addEventListener("click", goToPrevPage);
+      document.querySelector(".pagination .next").addEventListener("click", goToNextPage);
+
+      // For handling the emotion detector
+      document.getElementById('detect-emotion-btn').addEventListener('click', function() {
+        fetch('/detect_emotion')
+          .then(response => response.text())
+          .then(data => console.log(data))
+          .catch(error => console.error('Error:', error));
+      });
+    });
+  </script>
+</body>
+
+</html>
+
